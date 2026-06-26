@@ -11,7 +11,7 @@ struct Task {
     bool isCompleted;
 };
 
-const string FILE_NAME = "ëþáà äèðåêòîðiÿ ôàéëó ";
+const string FILE_NAME = "any directory";
 void loadTasks(vector<Task>& tasks) {
     ifstream file(FILE_NAME);
     if (!file.is_open()) {
@@ -35,14 +35,14 @@ void saveTasks(const vector<Task>& tasks) {
         file.close();
     }
     else {
-        cout << "Ïîìèëêà çáåðåæåííÿ ó ôàéë\n";
+        cout << "erorr save in file\n";
     }
 }
 
 void printTask(int index, const Task& task) {
     cout << "[" << index + 1 << "] ";
     cout << (task.isCompleted ? "[X] " : "[ ] ");
-    cout << "Ïð³îðèòåò: " << task.priority << " | " << task.name << "\n";
+    cout << "Priority: " << task.priority << " | " << task.name << "\n";
 }
 
 int main() {
@@ -55,41 +55,41 @@ int main() {
     int choice = 0;
 
     while (choice != 8) {
-        cout << "\nÏëàíóâàëüíèê Ñïðâà\n";
-        cout << "1.Äîäàòè çàäà÷ó\n";
-        cout << "2.Ïîêàçàòè âñ³ çàäà÷³\n";
-        cout << "3.Ïîêàçàòè ò³ëüêè íåâèêîíàí³\n";
-        cout << "4.Ïîçíà÷èòè ÿê âèêîíàíó\n";
-        cout << "5.Âèäàëèòè çàäà÷ó\n";
-        cout << "6.Ïîøóê çà ïð³îðèòåòîì\n";
-        cout << "7.Çáåðåãòè ó ôàéë (âðó÷íó)\n";
-        cout << "8.Âèéòè\n";
-        cout << "Âàø âèá³ð: ";
+        cout << "\ncase planer\n";
+        cout << "1.add case\n";
+        cout << "2.show all case\n";
+        cout << "3.show only not complete\n";
+        cout << "4.mark complete\n";
+        cout << "5.delete case\n";
+        cout << "6.seacrh with priority\n";
+        cout << "7.save in file (self)\n";
+        cout << "8.exit\n";
+        cout << "enter: ";
         cin >> choice;
 
         if (choice == 1) {
             Task newTask;
-            cout << "Ââåä³òü íàçâó çàäà÷³: ";
+            cout << "enter name case: ";
             getline(cin >> ws, newTask.name);
-            cout << "Ââåä³òü ïð³îðèòåò (1 Âèñîêèé, 2 Ñåðåäí³é, 3 Íèçüêèé): ";
+            cout << "enter priority (1 high, 2 mid, 3 low): ";
             cin >> newTask.priority;
             newTask.isCompleted = false;
 
             tasks.push_back(newTask);
             saveTasks(tasks);
-            cout << "Çàäà÷ó äîäàíî\n";
+            cout << "case added\n";
 
         }
         else if (choice == 2) {
-            cout << "\nÂñ³ çàäà÷³\n";
-            if (tasks.empty()) cout << "Ñïèñîê ïîðîæí³é\n";
+            cout << "\nall case\n";
+            if (tasks.empty()) cout << "list empty\n";
             for (int i = 0; i < tasks.size(); i++) {
                 printTask(i, tasks[i]);
             }
 
         }
         else if (choice == 3) {
-            cout << "\nÍåâèêîíàí³ çàäà÷³\n";
+            cout << "\nuncomplete cases\n";
             bool found = false;
             for (int i = 0; i < tasks.size(); i++) {
                 if (!tasks[i].isCompleted) {
@@ -97,43 +97,43 @@ int main() {
                     found = true;
                 }
             }
-            if (!found) cout << "Óñ³ çàäà÷³ âèêîíàí³\n";
+            if (!found) cout << "all case completed\n";
 
         }
         else if (choice == 4) {
-            cout << "Ââåä³òü íîìåð çàäà÷³, ùîá ïîçíà÷èòè ÿê âèêîíàíó: ";
+            cout << "enter number of case, mark as completed: ";
             int num;
             cin >> num;
             if (num > 0 && num <= tasks.size()) {
                 tasks[num - 1].isCompleted = true;
                 saveTasks(tasks);
-                cout << "Ñòàòóñ îíîâëåíî\n";
+                cout << "status updated\n";
             }
             else {
-                cout << "Íåâ³ðíèé íîìåð\n";
+                cout << "wrong number\n";
             }
 
         }
         else if (choice == 5) {
-            cout << "Ââåä³òü íîìåð çàäà÷³ äëÿ âèäàëåííÿ: ";
+            cout << "enter number case for delete: ";
             int num;
             cin >> num;
             if (num > 0 && num <= tasks.size()) {
                 
                 tasks.erase(tasks.begin() + num - 1);
                 saveTasks(tasks);
-                cout << "Çàäà÷ó âèäàëåíî\n";
+                cout << "case deleted\n";
             }
             else {
-                cout << "Íåâ³ðíèé íîìåð\n";
+                cout << "wrong number\n";
             }
 
         }
         else if (choice == 6) {
-            cout << "Ââåä³òü ïð³îðèòåò äëÿ ïîøóêó (1, 2 àáî 3): ";
+            cout << "enter priority for seacrh (1, 2 or 3): ";
             int p;
             cin >> p;
-            cout << "\nÇàäà÷³ ç ïð³îðèòåòîì" << p << "\n";
+            cout << "\ncase with priority" << p << "\n";
             bool found = false;
             for (int i = 0; i < tasks.size(); i++) {
                 if (tasks[i].priority == p) {
@@ -141,20 +141,20 @@ int main() {
                     found = true;
                 }
             }
-            if (!found) cout << "Çàäà÷ ç òàêèì ïð³îðèòåòîì íå çíàéäåíî\n";
+            if (!found) cout << "case with this priority not found\n";
 
         }
         else if (choice == 7) {
             saveTasks(tasks);
-            cout << "Äàí³ çáåðåæåíî ó ôàéë " << FILE_NAME << "\n";
+            cout << "information saved in file " << FILE_NAME << "\n";
 
         }
         else if (choice == 8) {
             saveTasks(tasks);
-            cout << "Äî ïîáà÷åííÿ\n";
+            cout << "good bye\n";
         }
         else {
-            cout << "Íåâ³ðíà êîìàíäà ïðîáóéòå ùå ðàç\n";
+            cout << "wrong command retry\n";
         }
     }
 
