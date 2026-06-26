@@ -1,30 +1,30 @@
 #include <iostream>
-#include <vector>
-#include <string>
 #include <fstream>
 #include <windows.h>
 
 using namespace std;
 struct Task {
-    string name;
+    char name[100];
     int priority;
     bool isCompleted;
 };
 
-const string FILE_NAME = "any directory";
+const char FILE_NAME[] = "your file";
+const int MAX_TASKS = 100;
+
 void loadTasks(vector<Task>& tasks) {
     ifstream file(FILE_NAME);
     if (!file.is_open()) {
         return;
     }
-
-    Task tempTask;
-    while (file >> tempTask.isCompleted >> tempTask.priority) {
-        getline(file >> ws, tempTask.name);
-        tasks.push_back(tempTask);
+     countTasks = 0;
+while (countTasks < MAX_TASKS &&
+           file >> tasks[countTasks].isCompleted >> tasks[countTasks].priority) {
+        file.ignore();
+        file.getline(tasks[countTasks].name, 100);
+        countTasks++;
     }
-    file.close();
-}
+
 
 void saveTasks(const vector<Task>& tasks) {
     ofstream file(FILE_NAME);
@@ -39,18 +39,28 @@ void saveTasks(const vector<Task>& tasks) {
     }
 }
 
-void printTask(int index, const Task& task) {
+
+void printTask(int index, Task task) {
     cout << "[" << index + 1 << "] ";
-    cout << (task.isCompleted ? "[X] " : "[ ] ");
-    cout << "Priority: " << task.priority << " | " << task.name << "\n";
+    if (task.isCompleted) {
+        cout << "[X] ";
+    }
+    else {
+        cout << "[ ] ";
+    }
+    cout << "Priority: " << task.priority << " | ";
+    cout << task.name << "\n";
 }
+
 
 int main() {
     SetConsoleCP(1251);
     SetConsoleOutputCP(1251);
 
-    vector<Task> tasks;
-    loadTasks(tasks);
+    Task tasks[MAX_TASKS];
+    int countTasks = 0;
+
+    loadTasks(tasks, countTasks);
 
     int choice = 0;
 
@@ -68,95 +78,127 @@ int main() {
         cin >> choice;
 
         if (choice == 1) {
-            Task newTask;
-            cout << "enter name case: ";
-            getline(cin >> ws, newTask.name);
-            cout << "enter priority (1 high, 2 mid, 3 low): ";
-            cin >> newTask.priority;
-            newTask.isCompleted = false;
+            
+if (countTasks >= MAX_TASKS) {
+                cout << "too many cases\n";
+            }
+            else {
+                cout << "enter name case: ";
+                cin.ignore();
+                cin.getline(tasks[countTasks].name, 100);
 
-            tasks.push_back(newTask);
-            saveTasks(tasks);
-            cout << "case added\n";
+                cout << "enter priority (1 high, 2 mid, 3 low): ";
+                cin >> tasks[countTasks].priority;
 
+                tasks[countTasks].isCompleted = false;
+
+                countTasks++;
+
+                saveTasks(tasks, countTasks);
+
+                cout << "case added\n";
+            }
         }
         else if (choice == 2) {
             cout << "\nall case\n";
-            if (tasks.empty()) cout << "list empty\n";
-            for (int i = 0; i < tasks.size(); i++) {
-                printTask(i, tasks[i]);
+
+            if (countTasks == 0) {
+                cout << "list empty\n";
             }
 
+            for (int i = 0; i < countTasks; i++) {
+                printTask(i, tasks[i]);
+            }
         }
         else if (choice == 3) {
             cout << "\nuncomplete cases\n";
+
             bool found = false;
-            for (int i = 0; i < tasks.size(); i++) {
-                if (!tasks[i].isCompleted) {
+
+            for (int i = 0; i < countTasks; i++) {
+                if (tasks[i].isCompleted == false) {
                     printTask(i, tasks[i]);
                     found = true;
                 }
             }
-            if (!found) cout << "all case completed\n";
 
+            if (found == false) {
+                cout << "all case completed\n";
+            }
         }
         else if (choice == 4) {
-            cout << "enter number of case, mark as completed: ";
             int num;
+
+            cout << "enter number of case, mark as completed: ";
             cin >> num;
-            if (num > 0 && num <= tasks.size()) {
+
+            if (num > 0 && num <= countTasks) {
                 tasks[num - 1].isCompleted = true;
-                saveTasks(tasks);
+
+                saveTasks(tasks, countTasks);
+
                 cout << "status updated\n";
             }
             else {
                 cout << "wrong number\n";
             }
-
         }
         else if (choice == 5) {
-            cout << "enter number case for delete: ";
             int num;
+
+            cout << "enter number case for delete: ";
             cin >> num;
-            if (num > 0 && num <= tasks.size()) {
-                
-                tasks.erase(tasks.begin() + num - 1);
-                saveTasks(tasks);
+
+            if (num > 0 && num <= countTasks) {
+                for (int i = num - 1; i < countTasks - 1; i++) {
+                    tasks[i] = tasks[i + 1];
+                }
+
+                countTasks--;
+
+                saveTasks(tasks, countTasks);
+
                 cout << "case deleted\n";
             }
             else {
                 cout << "wrong number\n";
             }
-
         }
         else if (choice == 6) {
-            cout << "enter priority for seacrh (1, 2 or 3): ";
             int p;
+
+            cout << "enter priority for search (1, 2 or 3): ";
             cin >> p;
-            cout << "\ncase with priority" << p << "\n";
+
+            cout << "\ncase with priority " << p << "\n";
+
             bool found = false;
-            for (int i = 0; i < tasks.size(); i++) {
+
+            for (int i = 0; i < countTasks; i++) {
                 if (tasks[i].priority == p) {
                     printTask(i, tasks[i]);
                     found = true;
                 }
             }
-            if (!found) cout << "case with this priority not found\n";
 
+            if (found == false) {
+                cout << "case with this priority not found\n";
+            }
         }
         else if (choice == 7) {
-            saveTasks(tasks);
-            cout << "information saved in file " << FILE_NAME << "\n";
+            saveTasks(tasks, countTasks);
 
+            cout << "information saved in file " << FILE_NAME << "\n";
         }
         else if (choice == 8) {
-            saveTasks(tasks);
+            saveTasks(tasks, countTasks);
+
             cout << "good bye\n";
         }
         else {
             cout << "wrong command retry\n";
         }
-    }
+
 
     return 0;
 }
