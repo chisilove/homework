@@ -7,6 +7,12 @@ class String {
   int size;
   int count;
   public:
+  String(int s){
+    size = s;
+    str = new char[size++]
+    str[0] = " ";
+    count++
+  }
 
 }
 
