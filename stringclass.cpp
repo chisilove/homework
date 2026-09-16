@@ -3,7 +3,9 @@ using namespace std;
 
 class String {
   private:
-
+  char* str;
+  int size;
+  int count;
   public:
 
 }
