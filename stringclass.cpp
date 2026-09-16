@@ -29,7 +29,7 @@ class String {
 
   void input(){
   cout << "enter text. u can enter max" << size << "symbols: ";
-  cin.getline(str, size + 1); //s4itue ves ryadok
+  cin.getline(str, size + 1);
   }
 
   void output(){
@@ -47,6 +47,21 @@ int count = 0;
 
 int main()
 {
-    cout<<"class";
+    cout<<"string count first: " << String::getCount();
+    String s1;
+    s1.input();
+
+    String s2(15);
+    s2.input();
+
+    String s3("test string");
+//output stringiv
+    cout << "ready: \n";
+    cout << "string 1: " << s1.print();
+    cout << "string 2: " << s2.print();
+    cout << "string test: " << s3.print();
+    cout << "string count: " << String::getCount();
+  
+
     return 0;
 }
